@@ -21,12 +21,12 @@ describe("A Fact Sprite", function() {
 
 	beforeEach(function() {
 		fact = new Fact("1+1", "1");
-		factsprite = new Q.FactSprite(fact);
+		factsprite = new Q.FactSprite({fact:fact});
 	});
 
 	it('can be created', function() {
 		expect(factsprite).toBeDefined();
-		expect(factsprite.fact).toBe(fact);
+		expect(factsprite.p.fact).toBe(fact);
 	});
 
 	it('has appropriate defaults', function() {
@@ -36,8 +36,8 @@ describe("A Fact Sprite", function() {
 	});
 
 	it('allows to override the default properties.', function() {
-		f = new Q.FactSprite(fact, {font: "32pt Arial"});
-		expect(f.fact).toBe(fact);
+		f = new Q.FactSprite({fact: fact, font: "32pt Arial"});
+		expect(f.p.fact).toBe(fact);
 		expect(f.p.font).toBe("32pt Arial");
 	});
 
@@ -49,8 +49,8 @@ describe("A Fact Sprite", function() {
 		});
 		img.src = src;
 		waitsFor(function() { return img.complete; });
-		var factsprite = new Q.FactSprite(new Fact("1+1", "2"), {font: "45px Courier", fillStyle: "#000"});
-		factsprite.draw(Q.ctx);
+		var factsprite = new Q.FactSprite({fact: new Fact("1+1", "2"), font: "45px Courier", fillStyle: "#000"});
+		factsprite.render(Q.ctx);
 		expect(canvas).toImageDiffEqual(img);
 	});
 });

@@ -1,15 +1,13 @@
 Quintus.Facts = function(Q) {
 
 	Q.Sprite.extend("FactSprite", {
-		init: function(fact, props, defaultProps) {
-			this.p = Q._extend({
+		init: function(props, defaultProps) {
+			var defaultProps = {
 				font: "48pt Courier",
 				textAlign: "",
 				fillStyle: "#333"
-			}, defaultProps);
-
-			Q._extend(this.p, props);
-			this.fact = fact;
+			};
+			this._super(props, defaultProps);
 		},
 
 		draw: function(ctx) {
@@ -17,7 +15,7 @@ Quintus.Facts = function(Q) {
 			ctx.font = this.p.font;
 			ctx.textAlign = this.p.textAlign;
 			ctx.textBaseline = "top";
-			ctx.fillText(this.fact.Expression(), 0, 0);
+			ctx.fillText(this.p.fact.Expression(), 0, 0);
 		}
 	});
 
