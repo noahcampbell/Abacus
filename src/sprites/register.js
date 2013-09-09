@@ -13,7 +13,8 @@ Quintus.Registers = function(Q) {
 			return this.p.fact.Result();
 		},
 		draw: function(ctx) {
-			ctx.fillRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
+			ctx.strokeRect(-this.p.cx, -this.p.cy, this.p.w, this.p.h);
+			ctx.fillText(this.factResult(), -this.p.cx, -this.p.cy);
 		}
 	});
 };

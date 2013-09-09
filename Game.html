@@ -1,0 +1,145 @@
+<!DOCTTYPE HTML>
+<html>
+<head>
+<title>Abacus</title>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<meta name="viewport" content="width=device-width"/>
+
+<script src="lib/mathfactmatchengine-1.0.js"></script>
+<script src="lib/quintus-all.js"></script>
+<script src="lib/engine.js"></script>
+<link rel="apple-touch-startup-image" href="startup.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="apple-touch-icon-144x144.png" />
+</head>
+<body>
+<script>
+	window.onorientationchange = function() {
+		window.location.reload();
+	}
+	var fs = new FactStream(new OpThenResultTermInterval(1,20));
+	var Q = Quintus().include("Sprites, Scenes, Input, 2D, Touch, UI, Registers, Facts, MatchBoard"); // Load any needed modules
+
+        Q.setup({maximize:true})            // Add a canvas element onto the page
+         .touch(Q.SPRITE_ALL);                          // Add in touch support (for the UI)
+
+	function renderFact(fact, w, h) {
+		c = document.createElement("canvas");
+		c.width = w;
+		c.height = h;
+		ctx = c.getContext('2d');
+		ctx.fillStyle = "#333";
+		ctx.textAlign = "center";
+		ctx.font = "48pt Courier";
+		ctx.fillText(fact, w/2, h-10);
+		return c;
+	}
+/*
+	Q.Sprite.extend("Fact", {
+		init: function(p) {
+			this._super(p,{
+			      color: "red",
+			      w: 500,
+			      h: 70,
+	        	      x: Q.width/2,
+			      y: Q.height/2,
+			      gravity:0.05
+			    });
+			this.add('2d');
+			var fact = fs.next();
+			this.fact = fact.Expression() + "=" + fact.Result();
+			this._renderedFact = renderFact(this.fact, this.p.w, this.p.h);
+			this.on("touch");
+		},
+		draw: function(ctx) {
+			ctx.drawImage(this._renderedFact, -this.p.cx, -this.p.cy);
+		},
+		touch: function(touch) {
+			touch.stage.remove(touch.obj);
+			touch.stage.insert(new Q.Fact());
+		}
+	});
+*/
+	Q.UI.Text.extend("FPSCounter", {
+		init: function(p) {
+			this._super(p, {x: 100, y: 15, label: "FPS"});
+			this.fps = 0;
+			this.now;
+			this.lastUpdate = (new Date)*1 - 1;
+			this.lastUpdateDisplay = (new Date)*1 - 1;
+			this.fpsFilter = 50;
+		},
+		updateLabel: function() {
+			console.log(this.fps);
+			if(this.p) {
+				this.p.label = 0; //this.fps + " FPS";
+			}
+		},
+		step: function(dt) {
+			var thisFrameFPS = 1000 / ((this.now=new Date) - this.lastUpdate);
+			this.fps += (thisFrameFPS - this.fps) / this.fpsFilter;
+			this.lastUpdate = this.now;
+			if(this.now - this.lastUpdateDisplay > 1000) {
+				this.p.label = this.fps.toFixed(0) + " FPS";	
+				this.lastUpdateDisplay = this.now;
+			}
+		}
+	});
+
+	function renderBoard() {
+		baselinePx = Q.height - (Q.height * 0.3)
+		offset = Q.width / 4
+		h = 122
+		w = 114
+		for (var i = 0; i < 4; i++) {
+			var register = new Q.Register({
+				identifier: i,
+				x: offset * i + offset/2 - w/2,
+				y: baselinePx,
+				fact: fs.next()
+			});
+			Q.stage(1).insert(register);
+		}
+	};
+
+	Q.scene("facts", function(stage) {
+		/*
+		var sprite2 = new Q.Sprite({ x:0, y:Q.height - 40, w: Q.width * 2, h: 100, gravity:0 });
+		sprite2.add('2d');
+		sprite2.draw= function(ctx) {
+		   ctx.fillStyle = '#000';
+		   ctx.fillRect(-this.p.cx,-this.p.cy,this.p.w,this.p.h);
+		};
+		
+		stage.insert(sprite2);
+		*/
+	});
+
+	Q.scene("debugUI", function(stage) {
+		var fpsDisplay = stage.insert(new Q.FPSCounter());
+	});
+	var engine = new MathFactMatchEngine();
+
+	engine.SetExpressionGenerator(fs);
+
+	Q.stageScene("facts", 1);
+	Q.stageScene("debugUI", 2);
+	Q.stageScene("MatchingBoard", 3, {engine: engine});
+	Q.debug = false;
+	//renderBoard();
+	var MAX=2
+	var objects = 0;
+	/*
+	function injectFact() {
+		Q.stage(1).insert(new Q.Fact());
+		objects++;
+		if(objects < MAX) {
+			setTimeout(injectFact, 1 * 1000);
+		}
+	}
+	setTimeout(injectFact, 1 * 1000);
+	*/
+</script>
+</body>
+</html>
