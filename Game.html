@@ -18,11 +18,11 @@
 	window.onorientationchange = function() {
 		window.location.reload();
 	}
-	var fs = new FactStream(new OpThenResultTermInterval(1,20));
-	var Q = Quintus().include("Sprites, Scenes, Input, 2D, Touch, UI, Registers, Facts, MatchBoard"); // Load any needed modules
+	var fs = new FactStream(new OpThenResultTermInterval(1,10));
+	var Q = Quintus().include("Sprites,Scenes,2D,Touch,UI,Registers,Facts,MatchBoard"); // Load any needed modules
 
         Q.setup({maximize:true})            // Add a canvas element onto the page
-         .touch(Q.SPRITE_ALL);                          // Add in touch support (for the UI)
+         .touch(Q.SPRITE_ALL, [2]);         // Add in touch support (all sprites and stage 2)
 
 	function renderFact(fact, w, h) {
 		c = document.createElement("canvas");
@@ -69,6 +69,7 @@
 			this.lastUpdate = (new Date)*1 - 1;
 			this.lastUpdateDisplay = (new Date)*1 - 1;
 			this.fpsFilter = 50;
+			this.on("touch")
 		},
 		updateLabel: function() {
 			console.log(this.fps);
@@ -84,10 +85,13 @@
 				this.p.label = this.fps.toFixed(0) + " FPS";	
 				this.lastUpdateDisplay = this.now;
 			}
+		},
+		touch: function(touch) {
+			console.log(touch)
 		}
 	});
 
-	function renderBoard() {
+/*	function renderBoard() {
 		baselinePx = Q.height - (Q.height * 0.3)
 		offset = Q.width / 4
 		h = 122
@@ -102,9 +106,9 @@
 			Q.stage(1).insert(register);
 		}
 	};
-
+*/
+/*
 	Q.scene("facts", function(stage) {
-		/*
 		var sprite2 = new Q.Sprite({ x:0, y:Q.height - 40, w: Q.width * 2, h: 100, gravity:0 });
 		sprite2.add('2d');
 		sprite2.draw= function(ctx) {
@@ -113,9 +117,8 @@
 		};
 		
 		stage.insert(sprite2);
-		*/
 	});
-
+*/
 	Q.scene("debugUI", function(stage) {
 		var fpsDisplay = stage.insert(new Q.FPSCounter());
 	});
@@ -123,10 +126,10 @@
 
 	engine.SetExpressionGenerator(fs);
 
-	Q.stageScene("facts", 1);
-	Q.stageScene("debugUI", 2);
-	Q.stageScene("MatchingBoard", 3, {engine: engine});
-	Q.debug = false;
+	//Q.stageScene("facts", 1);
+	Q.stageScene("debugUI", 1);
+	Q.stageScene("MatchingBoard", 2, {engine: engine});
+	Q.debug = !true;
 	//renderBoard();
 	var MAX=2
 	var objects = 0;
