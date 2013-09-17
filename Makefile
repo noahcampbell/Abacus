@@ -1,5 +1,5 @@
 lib/engine.js: src/sprites/fact.js src/sprites/register.js src/scenes/matchboard.js
-	@uglifyjs $^ --output $@
+	@uglifyjs $^ --output $@ -b
 
 test/abacusspec.js: test/specs/factspec.js test/specs/registerspec.js test/specs/matchingscenespec.js
 	uglifyjs $^ --output $@ -b

@@ -22,6 +22,7 @@ Quintus.MatchBoard = function(Q) {
 				x: offset * i + offset/2 - w/2,
 			 	y: baselinePx,
 				registerId: i,
+				engine: e,
 				fact: {
 					Result: displayHelper(e, i)
 				}

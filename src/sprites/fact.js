@@ -9,10 +9,11 @@ Quintus.Facts = function(Q) {
 				fillStyle: "#333",
 				w:100,
 				h:48,
+				z:10,
 			};
 			this._super(props, defaultProps);
 			this.on("drag");
-			this.on("touch");
+			this.on("touchEnd");
 		},
 
 		draw: function(ctx) {
@@ -22,15 +23,20 @@ Quintus.Facts = function(Q) {
 			ctx.textBaseline = this.p.textBaseline;
 			ctx.fillRect(0,0,1,1);
 			ctx.fillText(this.p.fact.Expression(), 0, 0);
-			this.p.w = ctx.measureText(this.p.fact.Expression())
+			this.p.w = ctx.measureText(this.p.fact.Expression()).width;
 		},
 
-		touch: function(touch) {
-			console.log(touch)
-	  },
+
+		touchEnd: function(touch) {
+			try {
+				this.stage.collide(this, {maxCol: 1}); // why macCol doesn't default to 1???
+			} catch(e) {
+				this.p.x = touch.origX;
+				this.p.y = touch.origY;
+			}
+		},
 
 		drag: function(touch) {
-			console.log(touch)
 			this.p.x = touch.origX + touch.dx;
 			this.p.y = touch.origY + touch.dy;
 		}
