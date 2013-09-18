@@ -9,11 +9,12 @@ Quintus.Facts = function(Q) {
 				fillStyle: "#333",
 				w:100,
 				h:48,
-				z:10,
+				z:0,
 			};
 			this._super(props, defaultProps);
 			this.on("drag");
 			this.on("touchEnd");
+			this.on("reject");
 		},
 
 		draw: function(ctx) {
@@ -34,9 +35,17 @@ Quintus.Facts = function(Q) {
 				this.p.x = touch.origX;
 				this.p.y = touch.origY;
 			}
+			console.log(this.p.z)
+		},
+
+		reject: function() {
+			this.p.x = touch.p.origX;
+			this.p.y = touch.p.origY;
 		},
 
 		drag: function(touch) {
+		  this.p.origX = touch.origX;
+			this.p.origY = touch.origY;	
 			this.p.x = touch.origX + touch.dx;
 			this.p.y = touch.origY + touch.dy;
 		}

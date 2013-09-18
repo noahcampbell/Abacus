@@ -73,7 +73,7 @@
 
 	engine.SetExpressionGenerator(fs);
 
-	Q.debug = true;
+	Q.debug = !true;
 	Q.stageScene("debugUI", 1);
 	Q.stageScene("MatchingBoard", 2, {engine: engine});
 

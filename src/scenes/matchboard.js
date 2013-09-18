@@ -16,11 +16,13 @@ Quintus.MatchBoard = function(Q) {
 		var h = stage.options.h || 122;
 		var w = stage.options.w || 114;
 		var maxFacts = stage.options.maxFacts || 4;
+		
 		for(var i = 0; i < e.MatchRegisterCount(); i++) {
 			stage.insert(new Q.Register({
 				identifier:i+1, 
 				x: offset * i + offset/2 - w/2,
 			 	y: baselinePx,
+				z: 10,
 				registerId: i,
 				engine: e,
 				fact: {

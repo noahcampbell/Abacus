@@ -6,6 +6,7 @@ Quintus.Registers = function(Q) {
 			var defaults = {
 				w: 114,
 				h: 122,
+				z: 10,
 				textAlign: "center",
 				testBaseline: "top"
 			};
@@ -27,19 +28,32 @@ Quintus.Registers = function(Q) {
 			ctx.textAlign = this.p.textAlign;
 			ctx.textBaseline = this.p.textBaseline;
 			ctx.fillText(this.factResult(), 0, 0);
-			ctx.fillText(this.p.engine.MatchesRegisterCountAt(this.p.registerId), 0, 25);
+			ctx.fillText("(" + this.p.engine.MatchesRegisterCountAt(this.p.registerId) + ")", 0, 25);
 		},
 
 		collision: function(col) {
 			if(col.obj.p.fact) {
 				if(this.p.engine.MatchesAt(this.p.registerId, col.obj.p.fact.Result())) {
 					col.obj.destroy();
+					var maxFacts = 1;
+					var candidates = this.p.engine.GenerateExpressionCandidates(maxFacts);
+					for(var k = 0; k < maxFacts; k++) {
+						this.stage.insert(new Q.FactSprite({
+							fact: candidates[k],
+							y: 100,
+							x: 100
+						}));
+					}	
+				} else {
+					col.trigger("reject")
 				}
 			}
 	  },
 
 		touch: function(touch) {
-			this.p.engine.ClearMatchRegisterAt(this.p.registerId)
+			if(this.p.engine.MatchesRegisterLimitAt(this.p.registerId)) {
+				this.p.engine.ClearMatchRegisterAt(this.p.registerId)
+			}
 	 	}
 
 	});
