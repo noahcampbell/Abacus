@@ -30,8 +30,8 @@ describe("A Fact Sprite", function() {
 	});
 
 	it('has appropriate defaults', function() {
-		expect(factsprite.p.font).toBe("48pt Courier");
-		expect(factsprite.p.textAlign).toBe("");
+		expect(factsprite.p.font).toBe("48px Courier");
+		expect(factsprite.p.textAlign).toBe("center");
 		expect(factsprite.p.fillStyle).toBe("#333");
 	});
 
@@ -49,7 +49,7 @@ describe("A Fact Sprite", function() {
 		});
 		img.src = src;
 		waitsFor(function() { return img.complete; });
-		var factsprite = new Q.FactSprite({fact: new Fact("1+1", "2"), font: "45px Courier", fillStyle: "#000"});
+		var factsprite = new Q.FactSprite({x:41, y:26, fact: new Fact("1+1", "2"), font: "45px Courier", fillStyle: "#000"});
 		factsprite.render(Q.ctx);
 		expect(canvas).toImageDiffEqual(img);
 	});
