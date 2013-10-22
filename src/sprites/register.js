@@ -33,8 +33,11 @@ Quintus.Registers = function(Q) {
 
 		collision: function(col) {
 			if(col.obj.p.fact) {
+				var regFact = col.obj.p.fact
 				if(this.p.engine.MatchesAt(this.p.registerId, col.obj.p.fact.Result())) {
 					col.obj.destroy();
+
+										
 					var maxFacts = 1;
 					var candidates = this.p.engine.GenerateExpressionCandidates(maxFacts);
 					for(var k = 0; k < maxFacts; k++) {
@@ -51,9 +54,31 @@ Quintus.Registers = function(Q) {
 	  },
 
 		touch: function(touch) {
-			if(this.p.engine.MatchesRegisterLimitAt(this.p.registerId)) {
-				this.p.engine.ClearMatchRegisterAt(this.p.registerId)
+			var e = this.p.engine;
+			var registerId = this.p.registerId
+			if(e.MatchesRegisterCountAt(registerId) == 0) {
+				return
 			}
+
+			var facts = Q('FactSprite');
+			var factsDestroyed = 0;
+			facts.each(function() {
+				if(e.MatchesAt(registerId, this.p.fact.Result())) {
+					this.destroy()
+					factsDestroyed++;
+				}
+			});
+
+			var maxFacts = factsDestroyed;
+			var candidates = this.p.engine.GenerateExpressionCandidates(maxFacts);
+			for(var k = 0; k < maxFacts; k++) {
+				this.stage.insert(new Q.FactSprite({
+					fact: candidates[k],
+					y: 100 * (k+1),
+					x: 100 * (k+1)
+				}));
+			}
+			e.ClearMatchRegisterAt(registerId)
 	 	}
 
 	});

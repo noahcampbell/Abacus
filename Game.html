@@ -18,23 +18,10 @@
 	window.onorientationchange = function() {
 		window.location.reload();
 	}
-	var fs = new FactStream(new OpThenResultTermInterval(1,10));
 	var Q = Quintus().include("Sprites,Scenes,2D,Touch,UI,Registers,Facts,MatchBoard"); // Load any needed modules
 
         Q.setup({maximize:true})            // Add a canvas element onto the page
-         .touch(Q.SPRITE_ALL, [2]);         // Add in touch support (all sprites and stage 2)
-
-	function renderFact(fact, w, h) {
-		c = document.createElement("canvas");
-		c.width = w;
-		c.height = h;
-		ctx = c.getContext('2d');
-		ctx.fillStyle = "#333";
-		ctx.textAlign = "center";
-		ctx.font = "48pt Courier";
-		ctx.fillText(fact, w/2, h-10);
-		return c;
-	}
+         .touch(Q.SPRITE_ALL, [0]);         // Add in touch support (all sprites and stage 2)
 
 	Q.UI.Text.extend("FPSCounter", {
 		init: function(p) {
@@ -44,10 +31,8 @@
 			this.lastUpdate = (new Date)*1 - 1;
 			this.lastUpdateDisplay = (new Date)*1 - 1;
 			this.fpsFilter = 50;
-			this.on("touch")
 		},
 		updateLabel: function() {
-			console.log(this.fps);
 			if(this.p) {
 				this.p.label = 0; //this.fps + " FPS";
 			}
@@ -61,21 +46,19 @@
 				this.lastUpdateDisplay = this.now;
 			}
 		},
-		touch: function(touch) {
-			console.log(touch)
-		}
 	});
 
 	Q.scene("debugUI", function(stage) {
 		var fpsDisplay = stage.insert(new Q.FPSCounter());
 	});
-	var engine = new MathFactMatchEngine();
 
+	var engine = new MathFactMatchEngine();
+	var fs = new FactStream(new OpThenResultTermInterval(1,10));
 	engine.SetExpressionGenerator(fs);
 
 	Q.debug = !true;
 	Q.stageScene("debugUI", 1);
-	Q.stageScene("MatchingBoard", 2, {engine: engine});
+	Q.stageScene("MatchingBoard", 0, {engine: engine});
 
 </script>
 </body>

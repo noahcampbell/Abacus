@@ -35,8 +35,8 @@ Quintus.MatchBoard = function(Q) {
 		for(var k = 0; k < maxFacts; k++) {
 			stage.insert(new Q.FactSprite({
 				fact: candidates[k],
-				y: baselinePx + h/2,
-				x: offset * k + offset/2 - w
+				y: baselinePx + h/2 + 30,
+				x: offset * k + offset/2 - w + 50
 			}));
 		}
 	});
